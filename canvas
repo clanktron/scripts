@@ -1,0 +1,42 @@
+#!/bin/sh 
+
+# Dependencies: curl, jq
+
+ACCESS_TOKEN="${CANVAS_API_TOKEN:="invalid"}"
+domain="${domain:="bruinlearn.ucla.edu"}"
+canvasUrl=https://"$domain"/api/v1
+# planning on using eval with this but not sure how vars inside such will work
+# canvasQuery="curl -s https://"$domain"/api/v1/courses/ -H "Authorization: Bearer $ACCESS_TOKEN""
+
+# Get all courses
+# curl -s https://"$domain"/api/v1/courses -H "Authorization: Bearer $ACCESS_TOKEN" | jq 
+
+# Get active enrollments
+# curl -s https://"$domain"/api/v1/courses -H "Authorization: Bearer $ACCESS_TOKEN" | jq '.[] | select(.enrollments) | select(.enrollments[].enrollment_state=="active")'
+
+# Get calendars
+# calendars=$(curl -s https://"$domain"/api/v1/courses -H "Authorization: Bearer $ACCESS_TOKEN" | jq -r '.[] | select(.enrollments) | select(.enrollments[].enrollment_state=="active") | .calendar.ics')
+# echo "$calendars" | while read -r url; do
+#     curl -Os "$url" -H "Authorization: Bearer $ACCESS_TOKEN" 
+# done 
+
+# Get courseIds
+courseIds=$(curl -s https://"$domain"/api/v1/courses/ -H "Authorization: Bearer $ACCESS_TOKEN" | jq '.[] | select(.enrollments) | select(.enrollments[].enrollment_state=="active") | .id')
+echo "$courseIds" | while read -r id; do
+    echo "$id"
+    curl "$canvasUrl"/courses/"$id"/files -H "Authorization: Bearer $ACCESS_TOKEN" | jq
+done 
+
+# /:"$courseId"/
+
+# # Attempted graphql query
+# curl https://"$domain"/api/graphql \
+#   -H "Authorization: Bearer $ACCESS_TOKEN" \
+#   -d query="query courseInfo($courseId: ID!) {
+#        course(id: $courseId) {
+#         id
+#         _id
+#         name
+#        }
+#      }" \
+#   -d variables[courseId]=1
