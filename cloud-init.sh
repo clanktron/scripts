@@ -9,7 +9,6 @@ storage="${storage:=main}"
 curl -LO "$cloudinitISO" https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img
 
 # Customize cloud-image
-virt-customize -a "$cloudinitISO" --install qemu-guest-agent
 virt-customize -a "$cloudinitISO" --install nfs-common
 
 # Create a new virtual machine
