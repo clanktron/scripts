@@ -1,5 +1,5 @@
 #!/bin/sh
-# jependencies: libguestfs-tools 
+# dependencies: libguestfs-tools 
 cloudinitISO="${cloudinitISO:=focal-server-cloudimg-amd64.img}"
 templateName="${templateName:=ubuntu-cloud}"
 templateID="${templateID:=8000}"
